@@ -1,0 +1,49 @@
+{
+  "pizzaria": {
+    "nome": "Pizzaria Recanto do Sossego",
+    "horarios": "Quinta a Domingo | 18h–23h",
+    "whatsapp": "5575999759797",
+    "instagram": "pizzariarecantodosossego"
+  },
+  "calzones": [
+    { "nome": "Atum", "preco": 55.00 },
+    { "nome": "Camarão", "preco": 60.00 },
+    { "nome": "4 Queijos", "preco": 50.00 },
+    { "nome": "Calabresa", "preco": 50.00 },
+    { "nome": "Lombinho", "preco": 50.00 },
+    { "nome": "Peito de Peru", "preco": 50.00 },
+    { "nome": "Portuguesa", "preco": 50.00 },
+    { "nome": "Sertaneja", "preco": 55.00 },
+    { "nome": "Frango", "preco": 50.00 },
+    { "nome": "Da Casa", "preco": 55.00 }
+  ],
+  "salgadas": [
+    { "nome": "Bacon", "ingredientes": "queijo, molho, oregano", "precoG": 55.00, "precoM": 45.00 },
+    { "nome": "Calabresa", "ingredientes": "queijo, molho, cebola, oregano", "precoG": 55.00, "precoM": 45.00 },
+    { "nome": "Camarão", "ingredientes": "queijo, molho, oregano", "precoG": 70.00, "precoM": 60.00 },
+    { "nome": "Da Casa", "ingredientes": "queijo, molho, mantinha, bacon, palmito, milho, azeitona", "precoG": 60.00, "precoM": 50.00 },
+    { "nome": "Frango Catupiry", "ingredientes": "queijo, molho, oregano", "precoG": 60.00, "precoM": 50.00 },
+    { "nome": "Lombinho", "ingredientes": "queijo, molho, oregano", "precoG": 55.00, "precoM": 45.00 },
+    { "nome": "Marguerita", "ingredientes": "queijo, molho, tomate, manjericão", "precoG": 45.00, "precoM": 40.00 },
+    { "nome": "Portuguesa", "ingredientes": "queijo, molho, presunto, tomate, azeitona, ovo, cebola", "precoG": 60.00, "precoM": 50.00 },
+    { "nome": "Peito de Peru", "ingredientes": "queijo, molho, oregano", "precoG": 55.00, "precoM": 45.00 },
+    { "nome": "4 Queijos", "ingredientes": "queijo, molho, parmesão, gorgonzola, catupiry", "precoG": 60.00, "precoM": 50.00 },
+    { "nome": "Sertaneja", "ingredientes": "queijo, molho, carne, banana, cebola, catupiry, orégano", "precoG": 65.00, "precoM": 55.00 },
+    { "nome": "Atum", "ingredientes": "queijo, molho, cebola, oregano", "precoG": 60.00, "precoM": 55.00 },
+    { "nome": "Camarão Gorgonzola Geleia de Pimenta", "ingredientes": "queijo, molho, orégano", "precoG": 75.00, "precoM": 65.00 },
+    { "nome": "Milho Bacon Parmesão", "ingredientes": "queijo, molho, orégano", "precoG": 60.00, "precoM": 50.00 },
+    { "nome": "Frango Catupiry Milho Bacon", "ingredientes": "queijo, molho, orégano", "precoG": 60.00, "precoM": 50.00 }
+  ],
+  "doces": [
+    { "nome": "Chocolate", "precoG": 50.00, "precoM": 40.00 },
+    { "nome": "Romeu e Julieta", "precoG": 50.00, "precoM": 40.00 },
+    { "nome": "Chocolate/Morango", "precoG": 55.00, "precoM": 45.00 },
+    { "nome": "Chocolate/Bis", "precoG": 55.00, "precoM": 45.00 },
+    { "nome": "Calzone/Chocolate", "precoG": 50.00, "precoM": 40.00 }
+  ],
+  "bebidas": [
+    { "nome": "Pepsi 1L", "preco": 8.00 },
+    { "nome": "Guaraná 1L", "preco": 8.00 },
+    { "nome": "Guaraná Lata", "preco": 5.00 }
+  ]
+}

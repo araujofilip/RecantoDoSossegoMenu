@@ -1,0 +1,1314 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pizzaria Recanto do Sossego — O sabor que mora longe da pressa</title>
+  <meta name="description" content="Pizzas artesanais, calzones e o sossego que faltava no seu fim de semana. Quinta a Domingo, 18h às 23h." />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Pizzaria Recanto do Sossego" />
+  <meta property="og:description" content="O sabor que mora longe da pressa." />
+  <meta property="og:type" content="website" />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,800;0,9..144,900;1,9..144,400;1,9..144,600;1,9..144,900&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&family=Caveat:wght@500;700&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind via CDN (Play) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            sossego: {
+              50:  '#FFF8E8',
+              100: '#FFF4DC', // creme massa
+              200: '#FDE9BE',
+              500: '#F4C24A', // amarelo queijo
+              red:  '#E63027', // vermelho pizza
+              redDark: '#B81F18',
+              green: '#2D6B3F', // verde sossego
+              greenDark: '#1F4A2C', // verde profundo
+              greenDeep: '#142E1B',
+              brown: '#5C3A1E', // marrom forno
+              ink: '#1A1410'
+            }
+          },
+          fontFamily: {
+            display: ['Fraunces', 'serif'],
+            body: ['"DM Sans"', 'system-ui', 'sans-serif'],
+            hand: ['Caveat', 'cursive']
+          },
+          keyframes: {
+            slowSpin: {
+              '0%':   { transform: 'rotate(0deg)' },
+              '100%': { transform: 'rotate(360deg)' }
+            },
+            float: {
+              '0%, 100%': { transform: 'translateY(0)' },
+              '50%':      { transform: 'translateY(-10px)' }
+            },
+            steamRise: {
+              '0%':   { opacity: '0', transform: 'translateY(0) scale(1)' },
+              '30%':  { opacity: '0.6' },
+              '100%': { opacity: '0', transform: 'translateY(-80px) scale(1.6)' }
+            },
+            fadeUp: {
+              '0%':   { opacity: '0', transform: 'translateY(30px)' },
+              '100%': { opacity: '1', transform: 'translateY(0)' }
+            }
+          },
+          animation: {
+            'slow-spin': 'slowSpin 60s linear infinite',
+            'float': 'float 6s ease-in-out infinite',
+            'steam': 'steamRise 4s ease-out infinite',
+            'fade-up': 'fadeUp 0.8s ease-out forwards'
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'DM Sans', system-ui, sans-serif;
+      background: #FFF4DC;
+      color: #1A1410;
+      overflow-x: hidden;
+    }
+
+    /* Grão / textura papel - SVG noise */
+    .grain::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.18;
+      mix-blend-mode: multiply;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.36  0 0 0 0 0.23  0 0 0 0 0.12  0 0 0 0.6 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+      background-size: 200px 200px;
+    }
+
+    .grain-dark::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.22;
+      mix-blend-mode: overlay;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.5 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+      background-size: 200px 200px;
+    }
+
+    /* Linha pontilhada que separa nome de preço (estilo cardápio) */
+    .menu-dots {
+      flex: 1;
+      border-bottom: 2px dotted rgba(92,58,30,0.35);
+      margin: 0 0.5rem 0.35rem;
+      min-width: 1rem;
+    }
+
+    /* Botão "stamp" estilo carimbo */
+    .stamp {
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+    .stamp:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: 4px 4px 0 0 #1F4A2C;
+    }
+    .stamp:active { transform: translate(0, 0); box-shadow: 0 0 0 0 #1F4A2C; }
+
+    /* Reveal on scroll */
+    .reveal { opacity: 0; transform: translateY(30px); transition: opacity .8s ease, transform .8s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* Drawer carrinho */
+    #cartDrawer { transition: transform .35s cubic-bezier(.4,0,.2,1); }
+    #cartDrawer.closed { transform: translateX(105%); }
+
+    /* Modal overlay */
+    .modal-backdrop { backdrop-filter: blur(4px); }
+
+    /* Custom scrollbar elegante no carrinho */
+    .pretty-scroll::-webkit-scrollbar { width: 8px; }
+    .pretty-scroll::-webkit-scrollbar-track { background: transparent; }
+    .pretty-scroll::-webkit-scrollbar-thumb { background: rgba(45,107,63,0.3); border-radius: 4px; }
+
+    /* Tab ativa */
+    .tab-active {
+      background: #2D6B3F;
+      color: #FFF4DC;
+      box-shadow: 3px 3px 0 0 #1F4A2C;
+    }
+
+    /* Wavy underline para títulos manuscritos */
+    .wavy {
+      text-decoration: underline wavy #E63027;
+      text-underline-offset: 8px;
+      text-decoration-thickness: 2px;
+    }
+
+    /* "Postcard" feel sections */
+    .postcard {
+      box-shadow: 0 1px 0 rgba(92,58,30,0.08),
+                  0 8px 24px -8px rgba(92,58,30,0.18);
+    }
+
+    /* Botão flutuante WhatsApp pulse */
+    @keyframes wapulse {
+      0%, 100% { box-shadow: 0 6px 20px -4px rgba(37,211,102,0.55), 0 0 0 0 rgba(37,211,102,0.5); }
+      50%      { box-shadow: 0 6px 20px -4px rgba(37,211,102,0.55), 0 0 0 14px rgba(37,211,102,0); }
+    }
+    .wa-pulse { animation: wapulse 2.4s infinite; }
+
+    /* Asymmetric tag (badge) */
+    .badge-rotate { display: inline-block; transform: rotate(-3deg); }
+
+    /* Scroll snap horizontal nos destaques */
+    .h-scroll {
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+    }
+    .h-scroll::-webkit-scrollbar { display: none; }
+    .h-scroll > * { scroll-snap-align: start; }
+  </style>
+</head>
+
+<body class="bg-sossego-100 text-sossego-ink">
+
+  <!-- ============== NAVBAR ============== -->
+  <nav id="navbar" class="fixed top-0 inset-x-0 z-40 transition-all duration-300">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10 py-4 flex items-center justify-between">
+      <a href="#hero" class="flex items-center gap-2 group">
+        <!-- Logo mark inline (simplificado da marca) -->
+        <svg viewBox="0 0 60 60" class="w-10 h-10 transition-transform group-hover:rotate-12" aria-hidden="true">
+          <defs>
+            <radialGradient id="lg1" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#F4C24A"/>
+              <stop offset="100%" stop-color="#E8A93B"/>
+            </radialGradient>
+          </defs>
+          <circle cx="30" cy="30" r="26" fill="url(#lg1)" stroke="#5C3A1E" stroke-width="3"/>
+          <circle cx="22" cy="22" r="3.5" fill="#E63027"/>
+          <circle cx="38" cy="26" r="3" fill="#E63027"/>
+          <circle cx="28" cy="38" r="3.2" fill="#E63027"/>
+          <circle cx="40" cy="40" r="2.5" fill="#1F4A2C"/>
+          <circle cx="18" cy="36" r="2.3" fill="#1F4A2C"/>
+        </svg>
+        <span class="font-display font-black text-lg tracking-tight leading-none">
+          <span id="logoTop" class="block text-sossego-100">recanto</span>
+          <span id="logoBot" class="block text-sossego-500 -mt-1 italic">do sossego</span>
+        </span>
+      </a>
+
+      <div class="hidden md:flex items-center gap-7 font-body text-sm font-medium">
+        <a href="#recanto" class="text-sossego-100/80 hover:text-sossego-red transition">Nosso recanto</a>
+        <a href="#cardapio" class="text-sossego-100/80 hover:text-sossego-red transition">Cardápio</a>
+        <a href="#monte" class="text-sossego-100/80 hover:text-sossego-red transition">Monte a sua</a>
+        <a href="#contato" class="text-sossego-100/80 hover:text-sossego-red transition">Contato</a>
+      </div>
+
+      <button id="openCart" class="relative bg-sossego-greenDark text-sossego-100 px-4 py-2.5 rounded-full font-body font-medium text-sm flex items-center gap-2 stamp">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+        <span class="hidden sm:inline">Pedido</span>
+        <span id="cartCount" class="absolute -top-1 -right-1 bg-sossego-red text-white text-[10px] w-5 h-5 rounded-full flex items-center justify-center font-bold hidden">0</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ============== HERO ============== -->
+  <section id="hero" class="relative min-h-screen overflow-hidden grain-dark" style="background: radial-gradient(ellipse at top right, #2D6B3F 0%, #1F4A2C 55%, #142E1B 100%);">
+
+    <!-- Decorações orgânicas SVG -->
+    <svg class="absolute top-20 left-8 w-24 opacity-30 hidden md:block" viewBox="0 0 80 80" fill="none">
+      <path d="M40 10 Q 35 30 20 38 Q 35 42 40 70 Q 45 42 60 38 Q 45 30 40 10Z" fill="#F4C24A"/>
+    </svg>
+    <svg class="absolute bottom-32 right-12 w-32 opacity-20 rotate-12 hidden md:block" viewBox="0 0 100 60" fill="none">
+      <path d="M5 30 Q 25 5 50 30 T 95 30" stroke="#FFF4DC" stroke-width="3" stroke-linecap="round" fill="none" stroke-dasharray="6 8"/>
+    </svg>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10 pt-32 sm:pt-36 pb-20 grid lg:grid-cols-12 gap-10 items-center min-h-screen relative">
+
+      <!-- Texto -->
+      <div class="lg:col-span-7 z-10">
+        <p class="font-hand text-3xl text-sossego-500 mb-2 reveal">desde sempre, com fogo de lenha</p>
+        <h1 class="font-display font-black text-sossego-100 leading-[0.85] text-6xl sm:text-7xl lg:text-8xl reveal">
+          o sabor<br>
+          <span class="italic font-light text-sossego-500">que mora</span><br>
+          <span class="text-sossego-red">longe da<br>pressa.</span>
+        </h1>
+        <p class="mt-8 font-body text-lg text-sossego-100/85 max-w-lg leading-relaxed reveal">
+          Pizzas e calzones feitos no tempo que a massa pede, no forno que a brasa aquece. Chega, senta, descansa — aqui o sossego é receita da casa.
+        </p>
+
+        <div class="mt-10 flex flex-wrap items-center gap-4 reveal">
+          <a href="#cardapio" class="bg-sossego-red text-sossego-100 px-7 py-4 rounded-full font-body font-bold text-base stamp inline-flex items-center gap-2">
+            Ver o cardápio
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+          </a>
+          <a href="#monte" class="text-sossego-100 px-7 py-4 rounded-full font-body font-bold text-base border-2 border-sossego-100/30 hover:bg-sossego-100/10 transition inline-flex items-center gap-2">
+            Monte a sua
+          </a>
+        </div>
+
+        <!-- Pílulas de info -->
+        <div class="mt-12 flex flex-wrap gap-x-8 gap-y-3 text-sossego-100/70 font-body text-sm reveal">
+          <div class="flex items-center gap-2">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+            Qui–Dom · 18h às 23h
+          </div>
+          <div class="flex items-center gap-2">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+            Valença · BA
+          </div>
+          <div class="flex items-center gap-2">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-9 8.5 8.5 8.5 0 0 1-7.6-4.7L3 21l1.9-1.4A8.38 8.38 0 0 1 12 3a8.5 8.5 0 0 1 9 8.5Z"/></svg>
+            Pedido por WhatsApp
+          </div>
+        </div>
+      </div>
+
+      <!-- Pizza ilustrada -->
+      <div class="lg:col-span-5 relative flex items-center justify-center h-[420px] lg:h-[560px]">
+
+        <!-- Vapor -->
+        <div class="absolute top-0 left-1/2 -translate-x-1/2 flex gap-4 z-0">
+          <div class="w-3 h-3 bg-sossego-100/40 rounded-full animate-steam" style="animation-delay: 0s"></div>
+          <div class="w-2 h-2 bg-sossego-100/40 rounded-full animate-steam" style="animation-delay: 1s"></div>
+          <div class="w-3 h-3 bg-sossego-100/40 rounded-full animate-steam" style="animation-delay: 2s"></div>
+        </div>
+
+        <!-- Sombra -->
+        <div class="absolute bottom-12 w-[80%] h-12 bg-black/40 blur-2xl rounded-full"></div>
+
+        <!-- Pizza SVG (gira lentamente) -->
+        <svg viewBox="0 0 400 400" class="w-full max-w-md animate-slow-spin drop-shadow-2xl relative z-10" aria-label="Pizza ilustrada">
+          <defs>
+            <radialGradient id="crust" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#F4C24A"/>
+              <stop offset="85%" stop-color="#E8A93B"/>
+              <stop offset="100%" stop-color="#B87826"/>
+            </radialGradient>
+            <radialGradient id="cheese" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#FFE8A8"/>
+              <stop offset="100%" stop-color="#F4C24A"/>
+            </radialGradient>
+            <radialGradient id="pepp" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#E63027"/>
+              <stop offset="100%" stop-color="#9B1B14"/>
+            </radialGradient>
+          </defs>
+
+          <!-- Borda -->
+          <circle cx="200" cy="200" r="180" fill="url(#crust)" stroke="#5C3A1E" stroke-width="4"/>
+          <!-- Queijo -->
+          <circle cx="200" cy="200" r="150" fill="url(#cheese)"/>
+          <!-- Manchas de molho -->
+          <circle cx="180" cy="160" r="22" fill="#E63027" opacity="0.55"/>
+          <circle cx="240" cy="220" r="18" fill="#E63027" opacity="0.45"/>
+          <circle cx="160" cy="240" r="20" fill="#E63027" opacity="0.5"/>
+
+          <!-- Pepperonis -->
+          <g>
+            <circle cx="140" cy="150" r="22" fill="url(#pepp)" stroke="#7A1410" stroke-width="2"/>
+            <circle cx="135" cy="145" r="3" fill="#7A1410"/>
+            <circle cx="148" cy="155" r="2.5" fill="#7A1410"/>
+          </g>
+          <g>
+            <circle cx="260" cy="160" r="20" fill="url(#pepp)" stroke="#7A1410" stroke-width="2"/>
+            <circle cx="255" cy="155" r="2.5" fill="#7A1410"/>
+          </g>
+          <g>
+            <circle cx="220" cy="270" r="24" fill="url(#pepp)" stroke="#7A1410" stroke-width="2"/>
+            <circle cx="215" cy="265" r="3" fill="#7A1410"/>
+            <circle cx="228" cy="275" r="2.5" fill="#7A1410"/>
+          </g>
+          <g>
+            <circle cx="130" cy="240" r="18" fill="url(#pepp)" stroke="#7A1410" stroke-width="2"/>
+            <circle cx="125" cy="237" r="2.5" fill="#7A1410"/>
+          </g>
+
+          <!-- Manjericão -->
+          <g fill="#2D6B3F">
+            <ellipse cx="200" cy="120" rx="8" ry="14" transform="rotate(20 200 120)"/>
+            <ellipse cx="280" cy="220" rx="7" ry="13" transform="rotate(-30 280 220)"/>
+            <ellipse cx="170" cy="280" rx="8" ry="13" transform="rotate(45 170 280)"/>
+          </g>
+
+          <!-- Azeitonas -->
+          <ellipse cx="195" cy="200" rx="7" ry="9" fill="#1A1410"/>
+          <ellipse cx="255" cy="195" rx="6" ry="8" fill="#1A1410"/>
+          <ellipse cx="165" cy="195" rx="6" ry="8" fill="#1A1410"/>
+
+          <!-- Brilho -->
+          <ellipse cx="155" cy="130" rx="35" ry="15" fill="white" opacity="0.18"/>
+        </svg>
+
+        <!-- Badge "feita hoje" -->
+        <div class="absolute -bottom-2 right-4 lg:right-0 bg-sossego-red text-sossego-100 rounded-full w-28 h-28 flex items-center justify-center rotate-12 z-20 font-display italic font-black text-center text-sm leading-tight border-4 border-sossego-100" style="box-shadow: 0 8px 24px -4px rgba(230,48,39,0.55);">
+          feita<br>na hora<br><span class="text-2xl not-italic">★</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Onda divisora -->
+    <svg class="absolute bottom-0 inset-x-0 w-full" viewBox="0 0 1440 80" preserveAspectRatio="none" fill="#FFF4DC">
+      <path d="M0,40 C320,80 720,0 1080,40 C1280,60 1380,50 1440,40 L1440,80 L0,80 Z"/>
+    </svg>
+  </section>
+
+  <!-- ============== NOSSO RECANTO (manifesto) ============== -->
+  <section id="recanto" class="relative py-24 sm:py-32 bg-sossego-100 overflow-hidden grain">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-10 grid md:grid-cols-12 gap-10 items-center relative">
+
+      <!-- Lado ilustração -->
+      <div class="md:col-span-5 relative reveal">
+        <!-- Forno ilustrado -->
+        <svg viewBox="0 0 320 320" class="w-full max-w-xs mx-auto" aria-hidden="true">
+          <!-- Base do forno -->
+          <rect x="40" y="200" width="240" height="80" rx="8" fill="#5C3A1E"/>
+          <rect x="40" y="200" width="240" height="10" fill="#3D2510"/>
+          <!-- Cúpula -->
+          <path d="M40 200 Q 40 80 160 60 Q 280 80 280 200 Z" fill="#B87826" stroke="#5C3A1E" stroke-width="4"/>
+          <!-- Tijolos cúpula -->
+          <path d="M80 180 Q 80 110 160 95" stroke="#5C3A1E" stroke-width="2" fill="none" opacity="0.4"/>
+          <path d="M240 180 Q 240 110 160 95" stroke="#5C3A1E" stroke-width="2" fill="none" opacity="0.4"/>
+          <path d="M50 160 H 270" stroke="#5C3A1E" stroke-width="2" opacity="0.4"/>
+          <path d="M55 140 H 265" stroke="#5C3A1E" stroke-width="2" opacity="0.4"/>
+          <!-- Boca do forno -->
+          <ellipse cx="160" cy="200" rx="90" ry="60" fill="#1A1410"/>
+          <!-- Fogo dentro -->
+          <path d="M120 220 Q 130 180 140 220 Q 150 170 170 220 Q 180 185 190 220 Q 200 175 210 220 Z" fill="#E63027"/>
+          <path d="M130 225 Q 140 200 150 225 Q 160 195 170 225 Q 180 205 190 225 Z" fill="#F4C24A"/>
+          <!-- Pizza no forno -->
+          <ellipse cx="160" cy="235" rx="65" ry="10" fill="#F4C24A" stroke="#5C3A1E" stroke-width="2"/>
+          <circle cx="140" cy="232" r="3" fill="#E63027"/>
+          <circle cx="175" cy="234" r="3" fill="#E63027"/>
+          <circle cx="160" cy="233" r="2.5" fill="#1F4A2C"/>
+          <!-- Fumaça -->
+          <path d="M155 60 Q 145 40 160 30 Q 175 40 165 60" fill="#FFF4DC" opacity="0.6"/>
+        </svg>
+
+        <!-- Manchas decorativas -->
+        <div class="absolute -top-4 -left-4 w-16 h-16 bg-sossego-red/20 rounded-full blur-2xl"></div>
+        <div class="absolute bottom-0 right-0 w-24 h-24 bg-sossego-greenDark/20 rounded-full blur-3xl"></div>
+      </div>
+
+      <!-- Texto -->
+      <div class="md:col-span-7 relative reveal">
+        <p class="font-hand text-2xl text-sossego-red mb-3">— Nosso recanto</p>
+        <h2 class="font-display font-black text-sossego-greenDeep text-4xl sm:text-5xl lg:text-6xl leading-[0.95] mb-6">
+          Um cantinho onde<br>
+          <span class="italic font-light">o tempo</span> <span class="wavy">desacelera</span>.
+        </h2>
+        <p class="font-body text-lg text-sossego-brown leading-relaxed mb-5">
+          A Pizzaria <b class="text-sossego-greenDark">Recanto do Sossego</b> nasceu de uma vontade simples: fazer pizza do jeito que pizza deve ser feita — com massa descansada, ingredientes que a gente reconhece e o tempo que cada coisa pede.
+        </p>
+        <p class="font-body text-lg text-sossego-brown leading-relaxed">
+          Aqui não tem pressa. Tem brasa, tem cheiro de manjericão, tem aquele último pedaço que ninguém quer pegar mas todo mundo olha.
+        </p>
+
+        <!-- Mini-stats -->
+        <div class="mt-10 grid grid-cols-3 gap-4 sm:gap-6">
+          <div class="text-center border-2 border-sossego-greenDark/15 rounded-2xl p-4 bg-white/50">
+            <p class="font-display font-black text-3xl text-sossego-red">25+</p>
+            <p class="font-body text-xs uppercase tracking-wider text-sossego-brown mt-1">sabores</p>
+          </div>
+          <div class="text-center border-2 border-sossego-greenDark/15 rounded-2xl p-4 bg-white/50">
+            <p class="font-display font-black text-3xl text-sossego-red">100%</p>
+            <p class="font-body text-xs uppercase tracking-wider text-sossego-brown mt-1">artesanal</p>
+          </div>
+          <div class="text-center border-2 border-sossego-greenDark/15 rounded-2xl p-4 bg-white/50">
+            <p class="font-display font-black text-3xl text-sossego-red">4</p>
+            <p class="font-body text-xs uppercase tracking-wider text-sossego-brown mt-1">noites/sem</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============== CARDÁPIO ============== -->
+  <section id="cardapio" class="relative py-24 sm:py-32 overflow-hidden grain-dark" style="background: linear-gradient(180deg, #2D6B3F 0%, #1F4A2C 100%);">
+
+    <!-- decoração -->
+    <svg class="absolute top-10 right-10 w-32 opacity-15" viewBox="0 0 100 100" fill="none">
+      <circle cx="50" cy="50" r="48" stroke="#F4C24A" stroke-width="2" stroke-dasharray="4 6"/>
+    </svg>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10 relative">
+      <div class="text-center max-w-3xl mx-auto mb-14 reveal">
+        <p class="font-hand text-3xl text-sossego-500">o que tem na casa</p>
+        <h2 class="font-display font-black text-sossego-100 text-5xl sm:text-6xl lg:text-7xl leading-none mt-2">
+          O <span class="italic font-light">cardápio</span>
+        </h2>
+        <p class="font-body text-sossego-100/75 mt-5 text-lg">
+          Pizzas em dois tamanhos, calzones recheados, doces para fechar a conta e bebidas geladas.
+        </p>
+      </div>
+
+      <!-- Tabs -->
+      <div id="tabs" class="flex flex-wrap justify-center gap-3 mb-12 reveal">
+        <button data-tab="salgadas" class="tab tab-active font-body font-bold uppercase tracking-wider text-sm px-6 py-3 rounded-full bg-sossego-100/15 text-sossego-100 transition">Pizzas salgadas</button>
+        <button data-tab="calzones" class="tab font-body font-bold uppercase tracking-wider text-sm px-6 py-3 rounded-full bg-sossego-100/15 text-sossego-100 transition">Calzones</button>
+        <button data-tab="doces" class="tab font-body font-bold uppercase tracking-wider text-sm px-6 py-3 rounded-full bg-sossego-100/15 text-sossego-100 transition">Pizzas doces</button>
+        <button data-tab="bebidas" class="tab font-body font-bold uppercase tracking-wider text-sm px-6 py-3 rounded-full bg-sossego-100/15 text-sossego-100 transition">Bebidas</button>
+      </div>
+
+      <!-- Container dos itens -->
+      <div id="menuList" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5"></div>
+
+      <p class="text-center font-hand text-sossego-100/70 text-xl mt-12 reveal">
+        ★ todos os preços em reais · cobramos com carinho ★
+      </p>
+    </div>
+  </section>
+
+  <!-- ============== MONTE SUA PIZZA ============== -->
+  <section id="monte" class="relative py-24 sm:py-32 bg-sossego-100 overflow-hidden grain">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-10 relative">
+      <div class="grid lg:grid-cols-12 gap-10 items-center">
+
+        <!-- Visual da pizza -->
+        <div class="lg:col-span-5 relative reveal">
+          <div class="relative w-full aspect-square max-w-sm mx-auto">
+            <!-- Sombra -->
+            <div class="absolute bottom-4 inset-x-8 h-8 bg-black/15 blur-2xl rounded-full"></div>
+
+            <svg id="builderPizza" viewBox="0 0 400 400" class="w-full h-full relative z-10 drop-shadow-xl">
+              <defs>
+                <radialGradient id="bCrust" cx="50%" cy="50%" r="50%">
+                  <stop offset="0%" stop-color="#F4C24A"/>
+                  <stop offset="85%" stop-color="#E8A93B"/>
+                  <stop offset="100%" stop-color="#B87826"/>
+                </radialGradient>
+                <radialGradient id="bCheese" cx="50%" cy="50%" r="50%">
+                  <stop offset="0%" stop-color="#FFE8A8"/>
+                  <stop offset="100%" stop-color="#F4C24A"/>
+                </radialGradient>
+              </defs>
+              <!-- Borda -->
+              <circle cx="200" cy="200" r="180" fill="url(#bCrust)" stroke="#5C3A1E" stroke-width="4"/>
+              <!-- Molho + queijo base -->
+              <circle cx="200" cy="200" r="150" fill="#C8302C" opacity="0.9"/>
+              <circle cx="200" cy="200" r="150" fill="url(#bCheese)" opacity="0.85"/>
+              <!-- Linhas divisórias (aparecem com JS) -->
+              <g id="bDividers"></g>
+              <!-- Labels dos sabores (aparecem com JS) -->
+              <g id="bSliceLabels"></g>
+            </svg>
+          </div>
+
+          <!-- Sabores selecionados visual -->
+          <div id="builderSelectedPreview" class="text-center mt-4">
+            <p class="font-hand text-2xl text-sossego-red">escolha seus sabores ↑</p>
+          </div>
+        </div>
+
+        <!-- Builder -->
+        <div class="lg:col-span-7 reveal">
+          <p class="font-hand text-2xl text-sossego-red mb-2">— Monte a sua</p>
+          <h2 class="font-display font-black text-sossego-greenDeep text-4xl sm:text-5xl leading-[0.95] mb-3">
+            Sua pizza,<br>
+            <span class="italic font-light">do seu jeito.</span>
+          </h2>
+          <p class="font-body text-sossego-brown mb-8">Escolha o tamanho e combine até <strong>3 sabores</strong> do nosso cardápio. O preço é proporcional a cada sabor escolhido.</p>
+
+          <!-- Tamanho -->
+          <div class="mb-6">
+            <label class="font-body font-bold text-sm uppercase tracking-wider text-sossego-brown block mb-2">Tamanho</label>
+            <div id="builderSize" class="flex gap-2">
+              <button data-size="M" class="b-size flex-1 px-4 py-3 rounded-xl border-2 border-sossego-greenDark/20 font-body font-bold transition">Média</button>
+              <button data-size="G" class="b-size flex-1 px-4 py-3 rounded-xl border-2 border-sossego-greenDark/20 font-body font-bold transition">Grande</button>
+            </div>
+          </div>
+
+          <!-- Sabores -->
+          <div class="mb-6">
+            <label class="font-body font-bold text-sm uppercase tracking-wider text-sossego-brown block mb-2">
+              Sabores
+              <span class="font-normal opacity-60 normal-case">(até 3 · com 3 sabores +R$ 5,00)</span>
+            </label>
+            <div id="builderFlavors" class="grid grid-cols-2 sm:grid-cols-3 gap-2 max-h-[320px] overflow-y-auto pretty-scroll pr-1">
+              <!-- Populated by JS from menu data -->
+            </div>
+          </div>
+
+          <!-- Resumo dos sabores selecionados -->
+          <div id="builderSummary" class="mb-5 hidden">
+            <div class="bg-sossego-greenDark/5 rounded-2xl p-4 space-y-2">
+              <p class="font-body font-bold text-sm uppercase tracking-wider text-sossego-brown">Sua combinação</p>
+              <div id="builderSummaryList"></div>
+              <div id="builderExtraNote" class="hidden">
+                <p class="font-hand text-base text-sossego-red mt-1">+R$ 5,00 por 3 sabores ★</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Total + adicionar -->
+          <div class="flex items-center justify-between gap-4 pt-5 border-t-2 border-sossego-greenDark/10">
+            <div>
+              <p class="font-body text-xs uppercase tracking-wider text-sossego-brown/70">Total</p>
+              <p id="builderTotal" class="font-display font-black text-4xl text-sossego-red">R$ 0,00</p>
+            </div>
+            <button id="addBuilder" class="bg-sossego-greenDark text-sossego-100 px-6 py-4 rounded-full font-body font-bold stamp inline-flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+              Adicionar ao pedido
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============== CONTATO ============== -->
+  <section id="contato" class="relative py-24 bg-sossego-greenDeep text-sossego-100 overflow-hidden grain-dark">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-10 relative">
+      <div class="grid md:grid-cols-2 gap-10 items-center">
+        <div class="reveal">
+          <p class="font-hand text-2xl text-sossego-500">— Vem pra cá</p>
+          <h2 class="font-display font-black text-5xl sm:text-6xl leading-none mt-2">
+            Da brasa<br>
+            <span class="italic font-light text-sossego-500">pra sua casa.</span>
+          </h2>
+          <p class="font-body text-sossego-100/75 mt-5 max-w-md">
+            Faça seu pedido pelo WhatsApp ou venha buscar quentinha. Atendemos de quinta a domingo, do começo da noite até as 23h.
+          </p>
+
+          <div class="mt-8 space-y-4">
+            <div class="flex items-center gap-4">
+              <div class="w-12 h-12 rounded-full bg-sossego-500 text-sossego-greenDeep flex items-center justify-center flex-shrink-0">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+              </div>
+              <div>
+                <p class="font-body text-xs uppercase tracking-wider text-sossego-100/60">Funcionamento</p>
+                <p class="font-display text-lg font-bold">Quinta a Domingo · 18h às 23h</p>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-4">
+              <div class="w-12 h-12 rounded-full bg-sossego-500 text-sossego-greenDeep flex items-center justify-center flex-shrink-0">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-9 8.5 8.5 8.5 0 0 1-7.6-4.7L3 21l1.9-1.4A8.38 8.38 0 0 1 12 3a8.5 8.5 0 0 1 9 8.5Z"/></svg>
+              </div>
+              <div>
+                <p class="font-body text-xs uppercase tracking-wider text-sossego-100/60">WhatsApp</p>
+                <p class="font-display text-lg font-bold">(75) 99975-9797</p>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-4">
+              <div class="w-12 h-12 rounded-full bg-sossego-500 text-sossego-greenDeep flex items-center justify-center flex-shrink-0">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+              </div>
+              <div>
+                <p class="font-body text-xs uppercase tracking-wider text-sossego-100/60">Instagram</p>
+                <p class="font-display text-lg font-bold">@pizzariarecantodosossego</p>
+              </div>
+            </div>
+          </div>
+
+          <a id="ctaWa" href="#" target="_blank" rel="noopener" class="mt-10 inline-flex items-center gap-3 bg-sossego-red text-sossego-100 px-8 py-4 rounded-full font-body font-bold stamp">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M17.6 6.32A7.85 7.85 0 0 0 12.05 4a7.94 7.94 0 0 0-6.88 11.9L4 20l4.21-1.1a7.93 7.93 0 0 0 3.83.98h.01c4.38 0 7.94-3.56 7.94-7.94 0-2.12-.83-4.11-2.39-5.62zm-5.55 12.22a6.6 6.6 0 0 1-3.36-.92l-.24-.14-2.5.65.67-2.44-.16-.25a6.6 6.6 0 0 1 5.6-10.1 6.55 6.55 0 0 1 4.66 1.93 6.55 6.55 0 0 1 1.93 4.67c0 3.63-2.96 6.6-6.6 6.6zm3.62-4.94c-.2-.1-1.17-.58-1.35-.65-.18-.07-.31-.1-.45.1-.13.2-.51.65-.62.78-.12.13-.23.15-.43.05-.2-.1-.84-.31-1.6-.99a6 6 0 0 1-1.1-1.37c-.12-.2-.01-.31.09-.41.09-.1.2-.23.3-.35.1-.12.13-.2.2-.33.07-.13.03-.25-.02-.35-.05-.1-.45-1.08-.62-1.48-.16-.39-.33-.34-.45-.34l-.38-.01c-.13 0-.35.05-.53.25-.18.2-.7.68-.7 1.66 0 .98.72 1.93.82 2.06.1.13 1.41 2.16 3.42 3.03.48.21.85.33 1.14.42.48.15.92.13 1.26.08.39-.06 1.17-.48 1.34-.94.16-.46.16-.86.12-.94-.05-.08-.18-.13-.38-.23z"/></svg>
+            Pedir agora
+          </a>
+        </div>
+
+        <div class="reveal">
+          <!-- "Cartão postal" decorativo -->
+          <div class="bg-sossego-100 text-sossego-ink p-8 rounded-2xl postcard relative" style="transform: rotate(2deg);">
+            <div class="absolute -top-3 -left-3 w-10 h-10 bg-sossego-red rounded-full flex items-center justify-center text-sossego-100 font-display font-black">✓</div>
+            <p class="font-hand text-3xl text-sossego-red mb-3">olá, sossego!</p>
+            <p class="font-body text-sossego-brown leading-relaxed">
+              Esse cantinho foi feito pra você desacelerar. Pega o pedido, junta a galera, abre uma bebida — e deixa a vida andar mais devagar uma noite.
+            </p>
+            <div class="mt-6 pt-6 border-t-2 border-dashed border-sossego-brown/20">
+              <p class="font-display italic font-bold text-sossego-greenDark">— equipe Recanto do Sossego</p>
+            </div>
+            <!-- Selo -->
+            <div class="absolute -bottom-4 -right-4 w-20 h-20 rounded-full bg-sossego-500 border-4 border-sossego-100 flex items-center justify-center rotate-12 text-sossego-greenDeep font-display font-black text-center text-xs leading-tight">
+              FEITO<br>COM<br>FOGO
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============== FOOTER ============== -->
+  <footer class="bg-sossego-ink text-sossego-100/70 py-10 text-center font-body text-sm">
+    <p>© <span id="year"></span> Pizzaria Recanto do Sossego · feito com fogo e <span class="text-sossego-red">♥</span></p>
+    <p class="text-xs mt-2 opacity-60">Site desenvolvido como cardápio digital · cardápio editável em <code>/data/menu.json</code></p>
+  </footer>
+
+  <!-- ============== BOTÃO FLUTUANTE WHATSAPP ============== -->
+  <a id="waFloat" href="#" target="_blank" rel="noopener" class="fixed bottom-6 right-6 z-30 w-14 h-14 rounded-full bg-[#25D366] text-white flex items-center justify-center wa-pulse hover:scale-110 transition">
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><path d="M17.6 6.32A7.85 7.85 0 0 0 12.05 4a7.94 7.94 0 0 0-6.88 11.9L4 20l4.21-1.1a7.93 7.93 0 0 0 3.83.98h.01c4.38 0 7.94-3.56 7.94-7.94 0-2.12-.83-4.11-2.39-5.62zm-5.55 12.22a6.6 6.6 0 0 1-3.36-.92l-.24-.14-2.5.65.67-2.44-.16-.25a6.6 6.6 0 0 1 5.6-10.1 6.55 6.55 0 0 1 4.66 1.93 6.55 6.55 0 0 1 1.93 4.67c0 3.63-2.96 6.6-6.6 6.6zm3.62-4.94c-.2-.1-1.17-.58-1.35-.65-.18-.07-.31-.1-.45.1-.13.2-.51.65-.62.78-.12.13-.23.15-.43.05-.2-.1-.84-.31-1.6-.99a6 6 0 0 1-1.1-1.37c-.12-.2-.01-.31.09-.41.09-.1.2-.23.3-.35.1-.12.13-.2.2-.33.07-.13.03-.25-.02-.35-.05-.1-.45-1.08-.62-1.48-.16-.39-.33-.34-.45-.34l-.38-.01c-.13 0-.35.05-.53.25-.18.2-.7.68-.7 1.66 0 .98.72 1.93.82 2.06.1.13 1.41 2.16 3.42 3.03.48.21.85.33 1.14.42.48.15.92.13 1.26.08.39-.06 1.17-.48 1.34-.94.16-.46.16-.86.12-.94-.05-.08-.18-.13-.38-.23z"/></svg>
+  </a>
+
+  <!-- ============== DRAWER CARRINHO ============== -->
+  <div id="cartBackdrop" class="fixed inset-0 bg-black/50 z-40 hidden modal-backdrop"></div>
+  <aside id="cartDrawer" class="fixed top-0 right-0 h-full w-full sm:w-[420px] bg-sossego-100 z-50 flex flex-col closed shadow-2xl">
+    <header class="p-5 border-b-2 border-sossego-greenDark/10 flex items-center justify-between bg-sossego-greenDeep text-sossego-100">
+      <div>
+        <p class="font-hand text-2xl text-sossego-500 leading-none">seu pedido</p>
+        <h3 class="font-display font-black text-2xl leading-tight">Recanto do Sossego</h3>
+      </div>
+      <button id="closeCart" class="w-10 h-10 rounded-full bg-sossego-100/10 hover:bg-sossego-100/20 flex items-center justify-center transition">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+      </button>
+    </header>
+
+    <div id="cartItems" class="flex-1 overflow-y-auto p-5 pretty-scroll">
+      <div id="cartEmpty" class="text-center mt-16 px-6">
+        <svg viewBox="0 0 100 100" class="w-32 mx-auto opacity-50">
+          <circle cx="50" cy="50" r="40" fill="#F4C24A" stroke="#5C3A1E" stroke-width="3"/>
+          <circle cx="35" cy="40" r="5" fill="#E63027"/>
+          <circle cx="60" cy="55" r="5" fill="#E63027"/>
+          <circle cx="45" cy="65" r="4" fill="#1F4A2C"/>
+        </svg>
+        <p class="font-hand text-2xl text-sossego-red mt-4">tá vazio por aqui</p>
+        <p class="font-body text-sm text-sossego-brown/70 mt-2">Adicione pizzas, calzones, ou monte a sua.</p>
+      </div>
+    </div>
+
+    <footer class="border-t-2 border-sossego-greenDark/10 p-5 bg-sossego-50">
+      <div class="flex items-end justify-between mb-4">
+        <div>
+          <p class="font-body text-xs uppercase tracking-wider text-sossego-brown/60">Total</p>
+          <p id="cartTotal" class="font-display font-black text-3xl text-sossego-greenDeep">R$ 0,00</p>
+        </div>
+        <p id="cartItemCount" class="font-hand text-lg text-sossego-red">0 itens</p>
+      </div>
+      <button id="sendWhatsapp" class="w-full bg-[#25D366] text-white py-4 rounded-full font-body font-bold flex items-center justify-center gap-2 hover:bg-[#1ebe5a] transition disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M17.6 6.32A7.85 7.85 0 0 0 12.05 4a7.94 7.94 0 0 0-6.88 11.9L4 20l4.21-1.1a7.93 7.93 0 0 0 3.83.98h.01c4.38 0 7.94-3.56 7.94-7.94 0-2.12-.83-4.11-2.39-5.62zm-5.55 12.22a6.6 6.6 0 0 1-3.36-.92l-.24-.14-2.5.65.67-2.44-.16-.25a6.6 6.6 0 0 1 5.6-10.1 6.55 6.55 0 0 1 4.66 1.93 6.55 6.55 0 0 1 1.93 4.67c0 3.63-2.96 6.6-6.6 6.6z"/></svg>
+        Finalizar no WhatsApp
+      </button>
+      <p class="text-xs text-sossego-brown/60 text-center mt-3 font-body">Você será redirecionado com o pedido pronto.</p>
+    </footer>
+  </aside>
+
+  <!-- ============== SCRIPT ============== -->
+  <script>
+  // ---------- Estado global ----------
+  const state = {
+    menu: null,
+    tab: 'salgadas',
+    cart: [],
+    builder: {
+      size: 'M',
+      flavors: []
+    }
+  };
+
+  const fmt = n => 'R$ ' + n.toFixed(2).replace('.', ',');
+
+  // ---------- Carrega menu ----------
+  async function loadMenu() {
+    try {
+      const res = await fetch('./menu.json');
+      if (!res.ok) throw new Error('fetch falhou');
+      state.menu = await res.json();
+    } catch (e) {
+      // fallback: menu inline
+      state.menu = INLINE_MENU;
+    }
+    renderMenu();
+    setupWhatsappLinks();
+    initBuilder();
+  }
+
+  // ---------- Render menu por categoria ----------
+  function renderMenu() {
+    const list = document.getElementById('menuList');
+    const cat = state.tab;
+    list.innerHTML = '';
+
+    const items = state.menu[cat] || [];
+    items.forEach((item, idx) => {
+      const card = document.createElement('article');
+      card.className = 'group bg-sossego-100 rounded-3xl p-5 postcard hover:-translate-y-1 transition-transform duration-300 relative overflow-hidden';
+
+      // Decoração canto
+      const corner = `<div class="absolute -top-6 -right-6 w-20 h-20 bg-sossego-red/10 rounded-full"></div>`;
+
+      // Ícone/SVG por categoria
+      const svgs = {
+        salgadas: pizzaSvg(item.nome),
+        calzones: calzoneSvg(),
+        doces: docePizzaSvg(item.nome),
+        bebidas: bebidaSvg(item.nome)
+      };
+
+      let priceBlock = '';
+      let actions = '';
+
+      if (cat === 'salgadas' || cat === 'doces') {
+        priceBlock = `
+          <div class="mt-4 space-y-1.5">
+            <div class="flex items-baseline">
+              <span class="font-body text-sm font-bold text-sossego-brown">Média</span>
+              <span class="menu-dots"></span>
+              <span class="font-display font-black text-xl text-sossego-red">${fmt(item.precoM)}</span>
+            </div>
+            <div class="flex items-baseline">
+              <span class="font-body text-sm font-bold text-sossego-brown">Grande</span>
+              <span class="menu-dots"></span>
+              <span class="font-display font-black text-xl text-sossego-red">${fmt(item.precoG)}</span>
+            </div>
+          </div>`;
+        actions = `
+          <div class="mt-4 flex gap-2">
+            <button class="add-btn flex-1 bg-sossego-greenDark text-sossego-100 py-2.5 rounded-full font-body font-bold text-sm hover:bg-sossego-greenDeep transition" data-name="${item.nome}" data-price="${item.precoM}" data-size="M" data-cat="${cat}">+ Média</button>
+            <button class="add-btn flex-1 bg-sossego-red text-sossego-100 py-2.5 rounded-full font-body font-bold text-sm hover:bg-sossego-redDark transition" data-name="${item.nome}" data-price="${item.precoG}" data-size="G" data-cat="${cat}">+ Grande</button>
+          </div>`;
+      } else {
+        priceBlock = `
+          <div class="mt-4 flex items-baseline">
+            <span class="font-body text-sm font-bold text-sossego-brown">Preço</span>
+            <span class="menu-dots"></span>
+            <span class="font-display font-black text-2xl text-sossego-red">${fmt(item.preco)}</span>
+          </div>`;
+        actions = `
+          <div class="mt-4">
+            <button class="add-btn w-full bg-sossego-greenDark text-sossego-100 py-2.5 rounded-full font-body font-bold text-sm hover:bg-sossego-greenDeep transition" data-name="${item.nome}" data-price="${item.preco}" data-cat="${cat}">+ Adicionar ao pedido</button>
+          </div>`;
+      }
+
+      const ingredientes = item.ingredientes
+        ? `<p class="font-body text-xs text-sossego-brown/75 mt-2 leading-relaxed italic">${item.ingredientes}</p>`
+        : '';
+
+      card.innerHTML = `
+        ${corner}
+        <div class="relative z-10">
+          <div class="flex items-start justify-between gap-3 mb-2">
+            <div class="w-20 h-20 flex-shrink-0">${svgs[cat]}</div>
+            ${cat === 'salgadas' && ['Camarão Gorgonzola Geleia de Pimenta','Da Casa','Sertaneja'].includes(item.nome)
+              ? '<span class="badge-rotate bg-sossego-500 text-sossego-greenDeep font-display font-black text-[10px] px-2 py-1 rounded-full uppercase">especial</span>' : ''}
+          </div>
+          <h3 class="font-display font-black text-xl text-sossego-greenDeep leading-tight">${item.nome}</h3>
+          ${ingredientes}
+          ${priceBlock}
+          ${actions}
+        </div>
+      `;
+      list.appendChild(card);
+    });
+
+    // Bind add buttons
+    list.querySelectorAll('.add-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const name = btn.dataset.name;
+        const price = parseFloat(btn.dataset.price);
+        const size = btn.dataset.size || '';
+        const cat = btn.dataset.cat;
+        addToCart({
+          name: name + (size ? ` (${size})` : ''),
+          price,
+          cat
+        });
+        flyToCart(btn);
+      });
+    });
+  }
+
+  // ---------- SVGs ilustrativos por categoria ----------
+  function pizzaSvg(nome) {
+    // varia cor do topping principal pelo nome (sutil)
+    const hash = (nome || '').length;
+    const t1 = hash % 2 === 0 ? '#E63027' : '#5C3A1E';
+    return `
+      <svg viewBox="0 0 80 80">
+        <circle cx="40" cy="40" r="35" fill="#F4C24A" stroke="#5C3A1E" stroke-width="2"/>
+        <circle cx="40" cy="40" r="28" fill="#FFE8A8"/>
+        <circle cx="30" cy="32" r="5" fill="${t1}"/>
+        <circle cx="52" cy="38" r="4.5" fill="${t1}"/>
+        <circle cx="36" cy="52" r="4.5" fill="${t1}"/>
+        <ellipse cx="48" cy="50" rx="2.5" ry="3.5" fill="#1A1410"/>
+        <ellipse cx="44" cy="30" rx="2" ry="3" fill="#2D6B3F" transform="rotate(30 44 30)"/>
+      </svg>`;
+  }
+  function calzoneSvg() {
+    return `
+      <svg viewBox="0 0 80 80">
+        <path d="M10 50 Q 40 5 70 50 Q 65 60 40 60 Q 15 60 10 50 Z" fill="#F4C24A" stroke="#5C3A1E" stroke-width="2"/>
+        <path d="M25 35 Q 30 42 35 38" stroke="#5C3A1E" stroke-width="1.5" fill="none"/>
+        <path d="M45 35 Q 50 42 55 38" stroke="#5C3A1E" stroke-width="1.5" fill="none"/>
+        <circle cx="40" cy="58" r="3" fill="#E63027" opacity="0.6"/>
+      </svg>`;
+  }
+  function docePizzaSvg(nome) {
+    const n = (nome || '').toLowerCase();
+    let top = '#5C3A1E'; // chocolate
+    if (n.includes('morango')) top = '#E63027';
+    if (n.includes('romeu')) top = '#9B1B14';
+    return `
+      <svg viewBox="0 0 80 80">
+        <circle cx="40" cy="40" r="35" fill="#F4C24A" stroke="#5C3A1E" stroke-width="2"/>
+        <circle cx="40" cy="40" r="28" fill="${top}" opacity="0.75"/>
+        <circle cx="32" cy="34" r="3" fill="#FFF4DC"/>
+        <circle cx="50" cy="42" r="3" fill="#FFF4DC"/>
+        <circle cx="38" cy="50" r="3" fill="#FFF4DC"/>
+      </svg>`;
+  }
+  function bebidaSvg(nome) {
+    return `
+      <svg viewBox="0 0 80 80">
+        <path d="M28 15 L 52 15 L 50 70 Q 40 75 30 70 Z" fill="#1F4A2C" stroke="#5C3A1E" stroke-width="2"/>
+        <rect x="32" y="22" width="16" height="20" fill="#FFF4DC" rx="2"/>
+        <path d="M34 26 L 46 26 M 34 30 L 42 30 M 34 34 L 46 34" stroke="#1F4A2C" stroke-width="1"/>
+        <ellipse cx="40" cy="15" rx="12" ry="3" fill="#5C3A1E"/>
+      </svg>`;
+  }
+
+  // ---------- Tabs ----------
+  document.querySelectorAll('.tab').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tab').forEach(b => b.classList.remove('tab-active'));
+      btn.classList.add('tab-active');
+      state.tab = btn.dataset.tab;
+      renderMenu();
+    });
+  });
+
+  // ---------- Carrinho ----------
+  function addToCart(item) {
+    state.cart.push(item);
+    updateCart();
+  }
+  function removeFromCart(i) {
+    state.cart.splice(i, 1);
+    updateCart();
+  }
+
+  function updateCart() {
+    const itemsEl = document.getElementById('cartItems');
+    const emptyEl = document.getElementById('cartEmpty');
+    const total = state.cart.reduce((s, i) => s + i.price, 0);
+    document.getElementById('cartTotal').textContent = fmt(total);
+    document.getElementById('cartItemCount').textContent = `${state.cart.length} ${state.cart.length === 1 ? 'item' : 'itens'}`;
+
+    const countBadge = document.getElementById('cartCount');
+    if (state.cart.length > 0) {
+      countBadge.classList.remove('hidden');
+      countBadge.textContent = state.cart.length;
+    } else {
+      countBadge.classList.add('hidden');
+    }
+
+    document.getElementById('sendWhatsapp').disabled = state.cart.length === 0;
+
+    if (state.cart.length === 0) {
+      itemsEl.innerHTML = '';
+      itemsEl.appendChild(emptyEl);
+      return;
+    }
+
+    itemsEl.innerHTML = '';
+    state.cart.forEach((it, i) => {
+      const row = document.createElement('div');
+      row.className = 'flex items-start gap-3 py-3 border-b border-sossego-greenDark/10 last:border-0';
+      row.innerHTML = `
+        <div class="w-12 h-12 flex-shrink-0">${
+          it.cat === 'calzones' ? calzoneSvg() :
+          it.cat === 'bebidas' ? bebidaSvg(it.name) :
+          it.cat === 'doces'   ? docePizzaSvg(it.name) :
+          pizzaSvg(it.name)
+        }</div>
+        <div class="flex-1 min-w-0">
+          <p class="font-display font-bold text-sossego-greenDeep leading-tight">${it.name}</p>
+          <p class="font-body text-sm text-sossego-red font-bold mt-0.5">${fmt(it.price)}</p>
+        </div>
+        <button data-idx="${i}" class="remove-btn text-sossego-brown/50 hover:text-sossego-red transition mt-1">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+        </button>
+      `;
+      itemsEl.appendChild(row);
+    });
+    itemsEl.querySelectorAll('.remove-btn').forEach(b => {
+      b.addEventListener('click', () => removeFromCart(parseInt(b.dataset.idx)));
+    });
+  }
+
+  // Abrir/fechar drawer
+  const drawer = document.getElementById('cartDrawer');
+  const backdrop = document.getElementById('cartBackdrop');
+  document.getElementById('openCart').addEventListener('click', () => {
+    drawer.classList.remove('closed');
+    backdrop.classList.remove('hidden');
+  });
+  document.getElementById('closeCart').addEventListener('click', closeCart);
+  backdrop.addEventListener('click', closeCart);
+  function closeCart() {
+    drawer.classList.add('closed');
+    backdrop.classList.add('hidden');
+  }
+
+  // Animação fly-to-cart (sutil)
+  function flyToCart(btn) {
+    const target = document.getElementById('openCart').getBoundingClientRect();
+    const start = btn.getBoundingClientRect();
+    const dot = document.createElement('div');
+    dot.style.cssText = `position:fixed;left:${start.left + start.width/2}px;top:${start.top}px;width:14px;height:14px;border-radius:50%;background:#E63027;z-index:99;transition:all .55s cubic-bezier(.5,-0.3,.7,1);pointer-events:none;`;
+    document.body.appendChild(dot);
+    requestAnimationFrame(() => {
+      dot.style.left = (target.left + target.width/2) + 'px';
+      dot.style.top  = (target.top + 6) + 'px';
+      dot.style.transform = 'scale(0.4)';
+      dot.style.opacity = '0.2';
+    });
+    setTimeout(() => dot.remove(), 600);
+  }
+
+  // ---------- Monte sua pizza (combinar sabores) ----------
+  function initBuilder() {
+    if (!state.menu) return;
+    const flavorsContainer = document.getElementById('builderFlavors');
+    const allFlavors = state.menu.salgadas || [];
+    flavorsContainer.innerHTML = '';
+
+    allFlavors.forEach((item, idx) => {
+      const btn = document.createElement('button');
+      btn.className = 'b-flavor px-3 py-2.5 rounded-xl border-2 border-sossego-greenDark/20 font-body text-sm text-left transition hover:border-sossego-greenDark/40';
+      btn.dataset.idx = idx;
+      btn.innerHTML = `
+        <span class="block font-bold text-sossego-greenDeep leading-tight">${item.nome}</span>
+        <span class="block text-xs text-sossego-brown/60 mt-0.5">M ${fmt(item.precoM)} · G ${fmt(item.precoG)}</span>
+      `;
+      btn.addEventListener('click', () => toggleFlavor(idx, btn));
+      flavorsContainer.appendChild(btn);
+    });
+  }
+
+  function toggleFlavor(idx, btn) {
+    const i = state.builder.flavors.indexOf(idx);
+    if (i >= 0) {
+      // Remove
+      state.builder.flavors.splice(i, 1);
+      btn.classList.remove('bg-sossego-greenDark', 'text-sossego-100', 'border-sossego-greenDark');
+      btn.querySelectorAll('span').forEach(s => {
+        s.classList.remove('text-sossego-100', 'text-sossego-100/70');
+      });
+    } else {
+      // Add (max 3)
+      if (state.builder.flavors.length >= 3) {
+        btn.animate([{transform:'scale(1)'},{transform:'scale(1.05)'},{transform:'scale(1)'}], {duration:300});
+        return;
+      }
+      state.builder.flavors.push(idx);
+      btn.classList.add('bg-sossego-greenDark', 'text-sossego-100', 'border-sossego-greenDark');
+      btn.querySelector('span:first-child').classList.add('text-sossego-100');
+      btn.querySelector('span:last-child').classList.add('text-sossego-100/70');
+    }
+    updateBuilder();
+  }
+
+  function calcBuilderTotal() {
+    const flavors = state.builder.flavors;
+    const items = state.menu.salgadas;
+    const sizeKey = state.builder.size === 'G' ? 'precoG' : 'precoM';
+    const count = flavors.length;
+    if (count === 0) return 0;
+
+    const prices = flavors.map(idx => items[idx][sizeKey]);
+    const sum = prices.reduce((a, b) => a + b, 0);
+    const proportional = sum / count;
+    const extra = count === 3 ? 5 : 0;
+    // Total = proporcional × count / count = sum/count... nope
+    // Na verdade o total é a MÉDIA ponderada: cada sabor contribui com 1/N do seu preço
+    // Total = soma de (preço_i / N) para cada sabor = sum / N
+    // Mas isso daria um preço menor pra 2 sabores...
+    // Revisando: o padrão de pizzaria é:
+    //   1 sabor → preço cheio
+    //   2 sabores → soma / 2 (mas cada metade contribui com metade do preço)
+    //     Na prática: (preço1 + preço2) / 2
+    //   3 sabores → (preço1 + preço2 + preço3) / 3 + R$5
+
+    // Mas pensando melhor: o preço final é proporcional
+    // Se eu pego metade de uma pizza de R$50 e metade de uma de R$70,
+    // eu pago R$50/2 + R$70/2 = R$60
+    // Isso é = (50+70)/2 = 60. OK, bate.
+    //
+    // 3 sabores: 1/3 de cada preço + R$5
+    // = sum/3 + 5
+
+    return proportional + extra;
+  }
+
+  function updateBuilder() {
+    const flavors = state.builder.flavors;
+    const items = state.menu.salgadas;
+    const sizeKey = state.builder.size === 'G' ? 'precoG' : 'precoM';
+    const count = flavors.length;
+    const total = calcBuilderTotal();
+
+    // Update total
+    document.getElementById('builderTotal').textContent = count > 0 ? fmt(total) : 'R$ 0,00';
+
+    // Enable/disable button
+    document.getElementById('addBuilder').disabled = count === 0;
+
+    // Update summary
+    const summaryEl = document.getElementById('builderSummary');
+    const summaryList = document.getElementById('builderSummaryList');
+    const extraNote = document.getElementById('builderExtraNote');
+
+    if (count > 0) {
+      summaryEl.classList.remove('hidden');
+      const fraction = count === 1 ? 'inteira' : count === 2 ? '½' : '⅓';
+      summaryList.innerHTML = flavors.map(idx => {
+        const item = items[idx];
+        const fullPrice = item[sizeKey];
+        const partPrice = fullPrice / count;
+        return `
+          <div class="flex items-center justify-between py-1.5">
+            <div class="flex items-center gap-2">
+              <span class="w-6 h-6 rounded-full bg-sossego-red/15 text-sossego-red flex items-center justify-center font-display font-bold text-xs">${fraction}</span>
+              <span class="font-body font-bold text-sm text-sossego-greenDeep">${item.nome}</span>
+            </div>
+            <span class="font-body text-sm text-sossego-brown/70">${fmt(partPrice)}</span>
+          </div>`;
+      }).join('');
+
+      extraNote.classList.toggle('hidden', count !== 3);
+    } else {
+      summaryEl.classList.add('hidden');
+    }
+
+    // Update pizza visual - divider lines
+    updatePizzaVisual();
+
+    // Update preview text
+    const preview = document.getElementById('builderSelectedPreview');
+    if (count === 0) {
+      preview.innerHTML = '<p class="font-hand text-2xl text-sossego-red">escolha seus sabores ↑</p>';
+    } else if (count === 1) {
+      preview.innerHTML = `<p class="font-hand text-2xl text-sossego-red">${items[flavors[0]].nome} inteira ★</p>`;
+    } else {
+      const names = flavors.map(i => items[i].nome).join(' + ');
+      preview.innerHTML = `<p class="font-hand text-xl text-sossego-red">${names} ★</p>`;
+    }
+  }
+
+  function updatePizzaVisual() {
+    const flavors = state.builder.flavors;
+    const items = state.menu.salgadas;
+    const dividers = document.getElementById('bDividers');
+    const labels = document.getElementById('bSliceLabels');
+    const count = flavors.length;
+
+    // Colors for slices (subtle overlay)
+    const sliceColors = ['rgba(230,48,39,0.12)', 'rgba(45,107,63,0.12)', 'rgba(244,194,74,0.15)'];
+
+    let divHtml = '';
+    let labelHtml = '';
+
+    if (count === 2) {
+      // Uma linha vertical dividindo ao meio
+      divHtml = `<line x1="200" y1="50" x2="200" y2="350" stroke="#5C3A1E" stroke-width="3" stroke-dasharray="8 4"/>`;
+      // Slice overlays
+      divHtml += `<path d="M200,50 A150,150 0 0,0 200,350 Z" fill="${sliceColors[0]}" />`;
+      divHtml += `<path d="M200,50 A150,150 0 0,1 200,350 Z" fill="${sliceColors[1]}" />`;
+      // Labels
+      const labelPositions = [[120, 200], [280, 200]];
+      flavors.forEach((idx, i) => {
+        const [x, y] = labelPositions[i];
+        const name = items[idx].nome;
+        const shortName = name.length > 12 ? name.substring(0, 11) + '…' : name;
+        labelHtml += `<text x="${x}" y="${y}" text-anchor="middle" dominant-baseline="middle" fill="#5C3A1E" font-family="DM Sans, sans-serif" font-weight="700" font-size="14">${shortName}</text>`;
+      });
+    } else if (count === 3) {
+      // 3 linhas do centro pra fora em 120°
+      const cx = 200, cy = 200, r = 150;
+      const angles = [270, 30, 150]; // graus
+      for (let i = 0; i < 3; i++) {
+        const a = angles[i] * Math.PI / 180;
+        const ex = cx + r * Math.cos(a);
+        const ey = cy + r * Math.sin(a);
+        divHtml += `<line x1="${cx}" y1="${cy}" x2="${ex}" y2="${ey}" stroke="#5C3A1E" stroke-width="3" stroke-dasharray="8 4"/>`;
+      }
+      // Slice overlays (pie segments)
+      for (let i = 0; i < 3; i++) {
+        const a1 = angles[i] * Math.PI / 180;
+        const a2 = angles[(i + 1) % 3] * Math.PI / 180;
+        const x1 = cx + r * Math.cos(a1);
+        const y1 = cy + r * Math.sin(a1);
+        const x2 = cx + r * Math.cos(a2);
+        const y2 = cy + r * Math.sin(a2);
+        divHtml += `<path d="M${cx},${cy} L${x1},${y1} A${r},${r} 0 0,1 ${x2},${y2} Z" fill="${sliceColors[i]}" />`;
+      }
+      // Labels nos centroides de cada fatia
+      const labelAngles = [330, 90, 210]; // meio de cada fatia em graus
+      const labelR = 85;
+      flavors.forEach((idx, i) => {
+        const a = labelAngles[i] * Math.PI / 180;
+        const x = cx + labelR * Math.cos(a);
+        const y = cy + labelR * Math.sin(a);
+        const name = items[idx].nome;
+        const shortName = name.length > 10 ? name.substring(0, 9) + '…' : name;
+        labelHtml += `<text x="${x}" y="${y}" text-anchor="middle" dominant-baseline="middle" fill="#5C3A1E" font-family="DM Sans, sans-serif" font-weight="700" font-size="12">${shortName}</text>`;
+      });
+    } else if (count === 1) {
+      // Sabor único - nome no centro
+      const name = items[flavors[0]].nome;
+      labelHtml = `<text x="200" y="200" text-anchor="middle" dominant-baseline="middle" fill="#5C3A1E" font-family="DM Sans, sans-serif" font-weight="700" font-size="18">${name}</text>`;
+    }
+
+    dividers.innerHTML = divHtml;
+    labels.innerHTML = labelHtml;
+  }
+
+  // Bind tamanho
+  document.querySelectorAll('.b-size').forEach(b => {
+    b.addEventListener('click', () => {
+      document.querySelectorAll('.b-size').forEach(x => x.classList.remove('bg-sossego-greenDark','text-sossego-100','border-sossego-greenDark'));
+      b.classList.add('bg-sossego-greenDark','text-sossego-100','border-sossego-greenDark');
+      state.builder.size = b.dataset.size;
+      updateBuilder();
+    });
+  });
+  // Inicializa M
+  document.querySelector('.b-size[data-size="M"]').click();
+
+  document.getElementById('addBuilder').addEventListener('click', (e) => {
+    const flavors = state.builder.flavors;
+    if (flavors.length === 0) return;
+
+    const items = state.menu.salgadas;
+    const count = flavors.length;
+    const total = calcBuilderTotal();
+    const sizeLabel = state.builder.size === 'G' ? 'Grande' : 'Média';
+    const names = flavors.map(i => items[i].nome).join(' / ');
+    const label = count === 1
+      ? `${names} (${sizeLabel})`
+      : `${count} Sabores ${sizeLabel}: ${names}`;
+
+    addToCart({
+      name: label,
+      price: total,
+      cat: 'salgadas'
+    });
+    flyToCart(e.currentTarget);
+
+    // Reset builder
+    state.builder.flavors = [];
+    document.querySelectorAll('.b-flavor').forEach(btn => {
+      btn.classList.remove('bg-sossego-greenDark', 'text-sossego-100', 'border-sossego-greenDark');
+      btn.querySelectorAll('span').forEach(s => {
+        s.classList.remove('text-sossego-100', 'text-sossego-100/70');
+      });
+    });
+    updateBuilder();
+  });
+
+  // ---------- WhatsApp ----------
+  function setupWhatsappLinks() {
+    const phone = state.menu.pizzaria.whatsapp;
+    const baseMsg = encodeURIComponent('Olá! Vim pelo site e gostaria de fazer um pedido 🍕');
+    const links = [document.getElementById('waFloat'), document.getElementById('ctaWa')];
+    links.forEach(a => a && (a.href = `https://wa.me/${phone}?text=${baseMsg}`));
+  }
+
+  document.getElementById('sendWhatsapp').addEventListener('click', () => {
+    if (state.cart.length === 0) return;
+    const phone = state.menu.pizzaria.whatsapp;
+    let msg = '🍕 *PEDIDO · RECANTO DO SOSSEGO* 🍕\n\n';
+    state.cart.forEach((it, i) => {
+      msg += `${i+1}. ${it.name}\n   _${fmt(it.price)}_\n`;
+    });
+    const total = state.cart.reduce((s, i) => s + i.price, 0);
+    msg += `\n*Total: ${fmt(total)}*\n\nObrigado! 🌿`;
+    window.open(`https://wa.me/${phone}?text=${encodeURIComponent(msg)}`, '_blank');
+  });
+
+  // ---------- Scroll reveal ----------
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+  // ---------- Navbar scroll ----------
+  const nav = document.getElementById('navbar');
+  const logoTop = document.getElementById('logoTop');
+  const logoBot = document.getElementById('logoBot');
+  const navLinks = nav.querySelectorAll('a[href^="#"]:not([href="#hero"])');
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 30) {
+      nav.classList.add('bg-sossego-100/95','backdrop-blur','border-b','border-sossego-greenDark/10','shadow-sm');
+      logoTop.classList.remove('text-sossego-100');
+      logoTop.classList.add('text-sossego-greenDark');
+      logoBot.classList.remove('text-sossego-500');
+      logoBot.classList.add('text-sossego-red');
+      navLinks.forEach(l => { l.classList.remove('text-sossego-100/80'); l.classList.add('text-sossego-ink/80'); });
+    } else {
+      nav.classList.remove('bg-sossego-100/95','backdrop-blur','border-b','border-sossego-greenDark/10','shadow-sm');
+      logoTop.classList.add('text-sossego-100');
+      logoTop.classList.remove('text-sossego-greenDark');
+      logoBot.classList.add('text-sossego-500');
+      logoBot.classList.remove('text-sossego-red');
+      navLinks.forEach(l => { l.classList.add('text-sossego-100/80'); l.classList.remove('text-sossego-ink/80'); });
+    }
+  });
+
+  // ---------- Year ----------
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  // ---------- Fallback inline menu ----------
+  const INLINE_MENU = {
+    "pizzaria": {
+      "nome": "Pizzaria Recanto do Sossego",
+      "horarios": "Quinta a Domingo | 18h–23h",
+      "whatsapp": "5575999759797",
+      "instagram": "pizzariarecantodosossego"
+    },
+    "calzones": [
+      { "nome": "Atum", "preco": 55 }, { "nome": "Camarão", "preco": 60 },
+      { "nome": "4 Queijos", "preco": 50 }, { "nome": "Calabresa", "preco": 50 },
+      { "nome": "Lombinho", "preco": 50 }, { "nome": "Peito de Peru", "preco": 50 },
+      { "nome": "Portuguesa", "preco": 50 }, { "nome": "Sertaneja", "preco": 55 },
+      { "nome": "Frango", "preco": 50 }, { "nome": "Da Casa", "preco": 55 }
+    ],
+    "salgadas": [
+      { "nome": "Bacon", "ingredientes": "queijo, molho, oregano", "precoG": 55, "precoM": 45 },
+      { "nome": "Calabresa", "ingredientes": "queijo, molho, cebola, oregano", "precoG": 55, "precoM": 45 },
+      { "nome": "Camarão", "ingredientes": "queijo, molho, oregano", "precoG": 70, "precoM": 60 },
+      { "nome": "Da Casa", "ingredientes": "queijo, molho, mantinha, bacon, palmito, milho, azeitona", "precoG": 60, "precoM": 50 },
+      { "nome": "Frango Catupiry", "ingredientes": "queijo, molho, oregano", "precoG": 60, "precoM": 50 },
+      { "nome": "Lombinho", "ingredientes": "queijo, molho, oregano", "precoG": 55, "precoM": 45 },
+      { "nome": "Marguerita", "ingredientes": "queijo, molho, tomate, manjericão", "precoG": 45, "precoM": 40 },
+      { "nome": "Portuguesa", "ingredientes": "queijo, molho, presunto, tomate, azeitona, ovo, cebola", "precoG": 60, "precoM": 50 },
+      { "nome": "Peito de Peru", "ingredientes": "queijo, molho, oregano", "precoG": 55, "precoM": 45 },
+      { "nome": "4 Queijos", "ingredientes": "queijo, molho, parmesão, gorgonzola, catupiry", "precoG": 60, "precoM": 50 },
+      { "nome": "Sertaneja", "ingredientes": "queijo, molho, carne, banana, cebola, catupiry, orégano", "precoG": 65, "precoM": 55 },
+      { "nome": "Atum", "ingredientes": "queijo, molho, cebola, oregano", "precoG": 60, "precoM": 55 },
+      { "nome": "Camarão Gorgonzola Geleia de Pimenta", "ingredientes": "queijo, molho, orégano", "precoG": 75, "precoM": 65 },
+      { "nome": "Milho Bacon Parmesão", "ingredientes": "queijo, molho, orégano", "precoG": 60, "precoM": 50 },
+      { "nome": "Frango Catupiry Milho Bacon", "ingredientes": "queijo, molho, orégano", "precoG": 60, "precoM": 50 }
+    ],
+    "doces": [
+      { "nome": "Chocolate", "precoG": 50, "precoM": 40 },
+      { "nome": "Romeu e Julieta", "precoG": 50, "precoM": 40 },
+      { "nome": "Chocolate/Morango", "precoG": 55, "precoM": 45 },
+      { "nome": "Chocolate/Bis", "precoG": 55, "precoM": 45 },
+      { "nome": "Calzone/Chocolate", "precoG": 50, "precoM": 40 }
+    ],
+    "bebidas": [
+      { "nome": "Pepsi 1L", "preco": 8 },
+      { "nome": "Guaraná 1L", "preco": 8 },
+      { "nome": "Guaraná Lata", "preco": 5 }
+    ]
+  };
+
+  // Inicializa
+  loadMenu();
+  </script>
+</body>
+</html>
