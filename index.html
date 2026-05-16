@@ -257,9 +257,9 @@
         class="relative bg-sossego-red hover:bg-sossego-redDark text-white px-5 py-2.5 rounded-full font-body font-bold text-sm flex items-center gap-2 transition shadow-lg shadow-sossego-red/30">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
           stroke-linecap="round" stroke-linejoin="round">
-          <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z" />
-          <path d="M3 6h18" />
-          <path d="M16 10a4 4 0 0 1-8 0" />
+          <circle cx="8" cy="21" r="1" />
+          <circle cx="19" cy="21" r="1" />
+          <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12" />
         </svg>
         <span class="hidden sm:inline">Pedido</span>
         <span id="cartCount"
@@ -430,31 +430,7 @@
 
       <!-- Lado ilustração -->
       <div class="md:col-span-5 relative reveal">
-        <!-- Forno ilustrado -->
-        <svg viewBox="0 0 320 320" class="w-full max-w-xs mx-auto" aria-hidden="true">
-          <!-- Base do forno -->
-          <rect x="40" y="200" width="240" height="80" rx="8" fill="#5C3A1E" />
-          <rect x="40" y="200" width="240" height="10" fill="#3D2510" />
-          <!-- Cúpula -->
-          <path d="M40 200 Q 40 80 160 60 Q 280 80 280 200 Z" fill="#B87826" stroke="#5C3A1E" stroke-width="4" />
-          <!-- Tijolos cúpula -->
-          <path d="M80 180 Q 80 110 160 95" stroke="#5C3A1E" stroke-width="2" fill="none" opacity="0.4" />
-          <path d="M240 180 Q 240 110 160 95" stroke="#5C3A1E" stroke-width="2" fill="none" opacity="0.4" />
-          <path d="M50 160 H 270" stroke="#5C3A1E" stroke-width="2" opacity="0.4" />
-          <path d="M55 140 H 265" stroke="#5C3A1E" stroke-width="2" opacity="0.4" />
-          <!-- Boca do forno -->
-          <ellipse cx="160" cy="200" rx="90" ry="60" fill="#1A1410" />
-          <!-- Fogo dentro -->
-          <path d="M120 220 Q 130 180 140 220 Q 150 170 170 220 Q 180 185 190 220 Q 200 175 210 220 Z" fill="#E63027" />
-          <path d="M130 225 Q 140 200 150 225 Q 160 195 170 225 Q 180 205 190 225 Z" fill="#F4C24A" />
-          <!-- Pizza no forno -->
-          <ellipse cx="160" cy="235" rx="65" ry="10" fill="#F4C24A" stroke="#5C3A1E" stroke-width="2" />
-          <circle cx="140" cy="232" r="3" fill="#E63027" />
-          <circle cx="175" cy="234" r="3" fill="#E63027" />
-          <circle cx="160" cy="233" r="2.5" fill="#1F4A2C" />
-          <!-- Fumaça -->
-          <path d="M155 60 Q 145 40 160 30 Q 175 40 165 60" fill="#FFF4DC" opacity="0.6" />
-        </svg>
+        <img src="./forno.png" alt="Forno a lenha" class="w-full max-w-xs mx-auto drop-shadow-xl" />
 
         <!-- Manchas decorativas -->
         <div class="absolute -top-4 -left-4 w-16 h-16 bg-sossego-red/20 rounded-full blur-2xl"></div>
