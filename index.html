@@ -988,10 +988,9 @@
     if (i >= 0) {
       // Remove
       state.builder.flavors.splice(i, 1);
-      btn.classList.remove('bg-sossego-greenDark', 'text-sossego-100', 'border-sossego-greenDark');
-      btn.querySelectorAll('span').forEach(s => {
-        s.classList.remove('text-sossego-100', 'text-sossego-100/70');
-      });
+      btn.classList.remove('bg-sossego-greenDark', 'border-sossego-greenDark');
+      btn.style.color = '';
+      btn.querySelectorAll('span').forEach(s => { s.style.color = ''; });
     } else {
       // Add (max 3)
       if (state.builder.flavors.length >= 3) {
@@ -999,9 +998,9 @@
         return;
       }
       state.builder.flavors.push(idx);
-      btn.classList.add('bg-sossego-greenDark', 'text-sossego-100', 'border-sossego-greenDark');
-      btn.querySelector('span:first-child').classList.add('text-sossego-100');
-      btn.querySelector('span:last-child').classList.add('text-sossego-100/70');
+      btn.classList.add('bg-sossego-greenDark', 'border-sossego-greenDark');
+      btn.style.color = '#FFF4DC';
+      btn.querySelectorAll('span').forEach(s => { s.style.color = '#FFF4DC'; });
     }
     updateBuilder();
   }
@@ -1039,6 +1038,7 @@
   }
 
   function updateBuilder() {
+    if (!state.menu) return;
     const flavors = state.builder.flavors;
     const items = state.menu.salgadas;
     const sizeKey = state.builder.size === 'G' ? 'precoG' : 'precoM';
@@ -1196,10 +1196,9 @@
     // Reset builder
     state.builder.flavors = [];
     document.querySelectorAll('.b-flavor').forEach(btn => {
-      btn.classList.remove('bg-sossego-greenDark', 'text-sossego-100', 'border-sossego-greenDark');
-      btn.querySelectorAll('span').forEach(s => {
-        s.classList.remove('text-sossego-100', 'text-sossego-100/70');
-      });
+      btn.classList.remove('bg-sossego-greenDark', 'border-sossego-greenDark');
+      btn.style.color = '';
+      btn.querySelectorAll('span').forEach(s => { s.style.color = ''; });
     });
     updateBuilder();
   });
@@ -1215,12 +1214,12 @@
   document.getElementById('sendWhatsapp').addEventListener('click', () => {
     if (state.cart.length === 0) return;
     const phone = state.menu.pizzaria.whatsapp;
-    let msg = '🍕 *PEDIDO · RECANTO DO SOSSEGO* 🍕\n\n';
+    let msg = '*PEDIDO - RECANTO DO SOSSEGO*\n\n';
     state.cart.forEach((it, i) => {
       msg += `${i+1}. ${it.name}\n   _${fmt(it.price)}_\n`;
     });
     const total = state.cart.reduce((s, i) => s + i.price, 0);
-    msg += `\n*Total: ${fmt(total)}*\n\nObrigado! 🌿`;
+    msg += `\n*Total: ${fmt(total)}*\n\nObrigado!`;
     window.open(`https://wa.me/${phone}?text=${encodeURIComponent(msg)}`, '_blank');
   });
 
