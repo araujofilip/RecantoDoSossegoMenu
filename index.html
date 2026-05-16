@@ -182,27 +182,9 @@
 
   <!-- ============== NAVBAR ============== -->
   <nav id="navbar" class="fixed top-0 inset-x-0 z-40 transition-all duration-300">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10 py-4 flex items-center justify-between">
-      <a href="#hero" class="flex items-center gap-2 group">
-        <!-- Logo mark inline (simplificado da marca) -->
-        <svg viewBox="0 0 60 60" class="w-10 h-10 transition-transform group-hover:rotate-12" aria-hidden="true">
-          <defs>
-            <radialGradient id="lg1" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stop-color="#F4C24A"/>
-              <stop offset="100%" stop-color="#E8A93B"/>
-            </radialGradient>
-          </defs>
-          <circle cx="30" cy="30" r="26" fill="url(#lg1)" stroke="#5C3A1E" stroke-width="3"/>
-          <circle cx="22" cy="22" r="3.5" fill="#E63027"/>
-          <circle cx="38" cy="26" r="3" fill="#E63027"/>
-          <circle cx="28" cy="38" r="3.2" fill="#E63027"/>
-          <circle cx="40" cy="40" r="2.5" fill="#1F4A2C"/>
-          <circle cx="18" cy="36" r="2.3" fill="#1F4A2C"/>
-        </svg>
-        <span class="font-display font-black text-lg tracking-tight leading-none">
-          <span id="logoTop" class="block text-sossego-100">recanto</span>
-          <span id="logoBot" class="block text-sossego-500 -mt-1 italic">do sossego</span>
-        </span>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10 h-20 flex items-center justify-between">
+      <a href="#hero" class="h-full py-2 px-3 flex items-center group rounded-2xl transition-all duration-700 ease-in-out" style="background: transparent;">
+        <img id="navLogo" src="./logo-transparente.png" alt="Pizzaria Recanto do Sossego" class="h-full w-auto transition-all duration-300 drop-shadow-md" />
       </a>
 
       <div class="hidden md:flex items-center gap-7 font-body text-sm font-medium">
@@ -1236,23 +1218,17 @@
 
   // ---------- Navbar scroll ----------
   const nav = document.getElementById('navbar');
-  const logoTop = document.getElementById('logoTop');
-  const logoBot = document.getElementById('logoBot');
+  const navLogo = document.getElementById('navLogo');
   const navLinks = nav.querySelectorAll('a[href^="#"]:not([href="#hero"])');
+  const logoLink = navLogo.parentElement;
   window.addEventListener('scroll', () => {
     if (window.scrollY > 30) {
       nav.classList.add('bg-sossego-100/95','backdrop-blur','border-b','border-sossego-greenDark/10','shadow-sm');
-      logoTop.classList.remove('text-sossego-100');
-      logoTop.classList.add('text-sossego-greenDark');
-      logoBot.classList.remove('text-sossego-500');
-      logoBot.classList.add('text-sossego-red');
+      logoLink.style.background = 'linear-gradient(135deg, #2D6B3F 0%, #1F4A2C 100%)';
       navLinks.forEach(l => { l.classList.remove('text-sossego-100/80'); l.classList.add('text-sossego-ink/80'); });
     } else {
       nav.classList.remove('bg-sossego-100/95','backdrop-blur','border-b','border-sossego-greenDark/10','shadow-sm');
-      logoTop.classList.add('text-sossego-100');
-      logoTop.classList.remove('text-sossego-greenDark');
-      logoBot.classList.add('text-sossego-500');
-      logoBot.classList.remove('text-sossego-red');
+      logoLink.style.background = 'transparent';
       navLinks.forEach(l => { l.classList.add('text-sossego-100/80'); l.classList.remove('text-sossego-ink/80'); });
     }
   });
