@@ -176,9 +176,11 @@
 
     /* Tab ativa */
     .tab-active {
-      background: #2D6B3F;
-      color: #FFF4DC;
-      box-shadow: 3px 3px 0 0 #1F4A2C;
+      background: #E63027 !important;
+      color: #FFF4DC !important;
+      border: 2px solid #FFF4DC !important;
+      box-shadow: 0 4px 14px -2px rgba(230, 48, 39, 0.5);
+      transform: scale(1.05);
     }
 
     /* Wavy underline para títulos manuscritos */
@@ -987,7 +989,12 @@
     // ---------- Tabs ----------
     document.querySelectorAll('.tab').forEach(btn => {
       btn.addEventListener('click', () => {
-        document.querySelectorAll('.tab').forEach(b => b.classList.remove('tab-active'));
+        document.querySelectorAll('.tab').forEach(b => {
+          b.classList.remove('tab-active');
+          b.style.background = '';
+          b.style.color = '';
+          b.style.border = '';
+        });
         btn.classList.add('tab-active');
         state.tab = btn.dataset.tab;
         renderMenu();
